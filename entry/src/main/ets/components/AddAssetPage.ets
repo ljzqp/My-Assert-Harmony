@@ -11,6 +11,7 @@ import { picker } from '@kit.CoreFileKit';
 import { fileIo } from '@kit.CoreFileKit';
 import { common } from '@kit.AbilityKit';
 import { BusinessError } from '@kit.BasicServicesKit';
+import { ImageUploadService } from '../services/ImageUploadService';
 
 /**
  * 新增资产页面组件
@@ -29,6 +30,7 @@ export struct AddAssetPage {
   @State icon: string = '✨';
   @State imageUrl: string = '';
   @State isIconPickerOpen: boolean = false;
+  @State isProcessingImage: boolean = false; // 图片处理中状态
 
   /**
    * 表单校验：名称
@@ -150,13 +152,38 @@ export struct AddAssetPage {
         fileIo.closeSync(sourceFile);
         fileIo.closeSync(destFile);
 
-        // 更新图片路径（添加 file:// 前缀用于 Image 组件显示）
-        this.imageUrl = `file://${destPath}`;
+        // 先显示原图
+        const originalImageUrl = `file://${destPath}`;
+        this.imageUrl = originalImageUrl;
         this.icon = ''; // 清空图标
+
+        // 开始处理图片
+        this.isProcessingImage = true;
+
+        try {
+          // 调用后端处理图片
+          const processedBase64 = await ImageUploadService.processStickerImage(
+            originalImageUrl,
+            12,      // outline_radius
+            'FFFFFF' // outline_color
+          );
+
+          // 保存处理后的图片到本地
+          const processedPath = ImageUploadService.saveBase64ToFile(processedBase64, filesDir);
+
+          // 更新为处理后的图片
+          this.imageUrl = `file://${processedPath}`;
+        } catch (processError) {
+          // 处理失败时保留原图
+          console.error(`Image processing failed: ${JSON.stringify(processError)}`);
+        } finally {
+          this.isProcessingImage = false;
+        }
       }
     } catch (error) {
       const err = error as BusinessError;
       console.error(`Failed to pick image: ${err.message}`);
+      this.isProcessingImage = false;
     }
   }
 
@@ -227,6 +254,21 @@ export struct AddAssetPage {
                     .height(96)
                     .borderRadius(16)
                     .objectFit(ImageFit.Cover)
+
+                  // 处理中遮罩
+                  if (this.isProcessingImage) {
+                    Column() {
+                      LoadingProgress()
+                        .width(32)
+                        .height(32)
+                        .color(Color.White)
+                    }
+                    .width(96)
+                    .height(96)
+                    .borderRadius(16)
+                    .backgroundColor('rgba(0, 0, 0, 0.5)')
+                    .justifyContent(FlexAlign.Center)
+                  }
                 } else {
                   Column() {
                     Text(this.icon)
