@@ -38,6 +38,26 @@ export struct AssetCard {
   }
 
   /**
+   * 计算剩余天数
+   */
+  private getDaysRemaining(): number {
+    const daysUsed = this.getDaysUsed();
+    const remaining = this.asset.targetUsageDays - daysUsed;
+    return Math.max(remaining, 0);
+  }
+
+  /**
+   * 计算日均成本（总成本/已使用天数）
+   */
+  private getDailyCost(): number {
+    const daysUsed = this.getDaysUsed();
+    if (daysUsed <= 0) {
+      return this.asset.purchasePrice;
+    }
+    return this.asset.purchasePrice / daysUsed;
+  }
+
+  /**
    * 计算使用进度（百分比）
    */
   private getProgress(): number {
@@ -73,27 +93,28 @@ export struct AssetCard {
     Column() {
       // 图片/图标区域（带状态徽章）
       Stack() {
-        // 图片或图标
-        if (this.asset.imageUrl) {
-          Image(this.asset.imageUrl)
-            .width('100%')
-            .aspectRatio(1)
-            .borderRadius(16)
-            .objectFit(ImageFit.Cover)
-        } else {
-          Column() {
+        // 统一的灰色背景区域
+        Column() {
+          if (this.asset.imageUrl) {
+            // 图片显示
+            Image(this.asset.imageUrl)
+              .width('80%')
+              .height('80%')
+              .objectFit(ImageFit.Contain)
+          } else {
+            // 图标显示
             Text(this.asset.icon)
               .fontSize(48)
           }
-          .width('100%')
-          .aspectRatio(1)
-          .justifyContent(FlexAlign.Center)
-          .backgroundColor('#F1F5F9')
-          .borderRadius(16)
         }
+        .width('100%')
+        .aspectRatio(1)
+        .justifyContent(FlexAlign.Center)
+        .backgroundColor('#F1F5F9')
+        .borderRadius(16)
 
         // 状态徽章（悬浮在左上角）
-        Text(this.asset.status)
+        Text(this.asset.status === 'In Use' ? '使用中' : this.asset.status)
           .fontSize(10)
           .fontWeight(FontWeight.Bold)
           .fontColor(this.getStatusColor().textColor)
@@ -107,55 +128,44 @@ export struct AssetCard {
 
       // 资产信息区域
       Column() {
-        // 名称和价格
-        Column() {
-          Text(this.asset.name)
-            .fontSize(14)
-            .fontWeight(FontWeight.Bold)
-            .fontColor($r('app.color.text_primary'))
-            .maxLines(1)
-            .textOverflow({ overflow: TextOverflow.Ellipsis })
-
-          Text(`¥${formatCurrency(this.asset.purchasePrice)}`)
-            .fontSize(12)
-            .fontColor($r('app.color.text_secondary'))
-            .margin({ top: 2 })
-        }
-        .width('100%')
-        .alignItems(HorizontalAlign.Start)
-
-        // 使用进度
-        Column() {
-          // 使用天数标签
-          Text(`${this.getDaysUsed()} days used`)
-            .fontSize(10)
-            .fontColor($r('app.color.text_secondary'))
-            .margin({ bottom: 4 })
-
-          // 进度条
-          Stack() {
-            // 进度条背景
-            Row()
-              .width('100%')
-              .height(6)
-              .backgroundColor($r('app.color.progress_bar_bg'))
-              .borderRadius(3)
-
-            // 进度条前景
-            Row()
-              .width(`${this.getProgress()}%`)
-              .height(6)
-              .backgroundColor($r('app.color.primary'))
-              .borderRadius(3)
-          }
+        // 名称
+        Text(this.asset.name)
+          .fontSize(14)
+          .fontWeight(FontWeight.Bold)
+          .fontColor($r('app.color.text_primary'))
+          .maxLines(1)
+          .textOverflow({ overflow: TextOverflow.Ellipsis })
           .width('100%')
-          .alignContent(Alignment.Start)
+
+        // 原价（删除线样式）
+        Text(`¥ ${formatCurrency(this.asset.purchasePrice)}`)
+          .fontSize(11)
+          .fontColor($r('app.color.text_secondary'))
+          .decoration({ type: TextDecorationType.LineThrough })
+          .margin({ top: 2 })
+
+        // 日均成本（突出显示）
+        Row() {
+          Text(`¥ ${this.getDailyCost().toFixed(2)}`)
+            .fontSize(16)
+            .fontWeight(FontWeight.Bold)
+            .fontColor($r('app.color.primary'))
+
+          Text('/天')
+            .fontSize(12)
+            .fontColor($r('app.color.primary'))
         }
-        .width('100%')
-        .margin({ top: 8 })
+        .margin({ top: 4 })
+
+        // 剩余天数
+        Text(`还剩 ${this.getDaysRemaining()} 天`)
+          .fontSize(10)
+          .fontColor($r('app.color.text_secondary'))
+          .margin({ top: 4 })
       }
       .width('100%')
       .padding(12)
+      .alignItems(HorizontalAlign.Start)
     }
     .width('100%')
     .backgroundColor($r('app.color.surface'))

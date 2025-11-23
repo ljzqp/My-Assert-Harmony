@@ -239,7 +239,7 @@ export class AssetApiService {
     console.info(`AssetApiService: PATCH ${url}`);
 
     const response = await httpRequest.request(url, {
-      method: http.RequestMethod.PATCH,
+      method: http.RequestMethod.GET,
       header: {
         'Content-Type': 'application/json'
       },
