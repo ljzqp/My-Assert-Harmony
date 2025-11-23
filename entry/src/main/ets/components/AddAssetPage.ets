@@ -150,8 +150,8 @@ export struct AddAssetPage {
         fileIo.closeSync(sourceFile);
         fileIo.closeSync(destFile);
 
-        // 更新图片路径
-        this.imageUrl = destPath;
+        // 更新图片路径（添加 file:// 前缀用于 Image 组件显示）
+        this.imageUrl = `file://${destPath}`;
         this.icon = ''; // 清空图标
       }
     } catch (error) {
