@@ -1,0 +1,72 @@
+{
+  "color": [
+    {
+      "name": "page_background",
+      "value": "#F8FAF8"
+    },
+    {
+      "name": "surface",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "primary",
+      "value": "#10B981"
+    },
+    {
+      "name": "secondary",
+      "value": "#14B8A6"
+    },
+    {
+      "name": "text_primary",
+      "value": "#1E293B"
+    },
+    {
+      "name": "text_secondary",
+      "value": "#64748B"
+    },
+    {
+      "name": "status_in_use_bg",
+      "value": "#D1FAE5"
+    },
+    {
+      "name": "status_in_use_text",
+      "value": "#065F46"
+    },
+    {
+      "name": "status_retired_bg",
+      "value": "#E2E8F0"
+    },
+    {
+      "name": "status_retired_text",
+      "value": "#475569"
+    },
+    {
+      "name": "status_sold_bg",
+      "value": "#FEF3C7"
+    },
+    {
+      "name": "status_sold_text",
+      "value": "#92400E"
+    },
+    {
+      "name": "progress_bar_bg",
+      "value": "#F1F5F9"
+    },
+    {
+      "name": "border_color",
+      "value": "#E2E8F0"
+    },
+    {
+      "name": "error_text",
+      "value": "#DC2626"
+    },
+    {
+      "name": "disabled_bg",
+      "value": "#9CA3AF"
+    },
+    {
+      "name": "start_window_background",
+      "value": "#FFFFFF"
+    }
+  ]
+}

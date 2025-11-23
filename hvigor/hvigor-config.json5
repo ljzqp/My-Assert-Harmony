@@ -1,0 +1,16 @@
+{
+  "modelVersion": "6.0.0",
+  "dependencies": {
+  },
+  "execution": {
+    "daemon": true,
+    "parallel": true,
+    "incremental": true
+  },
+  "logging": {
+    "level": "info"
+  },
+  "debugging": {
+    "stacktrace": false
+  }
+}

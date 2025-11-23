@@ -1,0 +1,24 @@
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Hvigor cache
+.hvigor/
+
+# Build outputs
+build/
+*/build/
+
+# Local properties
+local.properties
+
+# Node modules
+node_modules/
+oh_modules/
+
+# Logs
+*.log

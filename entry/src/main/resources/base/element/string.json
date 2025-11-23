@@ -1,0 +1,140 @@
+{
+  "string": [
+    {
+      "name": "app_name",
+      "value": "Asset Tracker"
+    },
+    {
+      "name": "page_title_my_assets",
+      "value": "My Assets"
+    },
+    {
+      "name": "page_subtitle",
+      "value": "A long-term perspective on value."
+    },
+    {
+      "name": "page_title_new_asset",
+      "value": "New Asset"
+    },
+    {
+      "name": "button_add_new_asset",
+      "value": "Add New Asset"
+    },
+    {
+      "name": "button_save_asset",
+      "value": "Save Asset"
+    },
+    {
+      "name": "button_cancel",
+      "value": "Cancel"
+    },
+    {
+      "name": "label_total_value",
+      "value": "Total Value"
+    },
+    {
+      "name": "label_avg_daily_cost",
+      "value": "Avg Daily Cost"
+    },
+    {
+      "name": "label_total_assets",
+      "value": "Total Assets"
+    },
+    {
+      "name": "label_days_used",
+      "value": "days used"
+    },
+    {
+      "name": "label_name",
+      "value": "Name"
+    },
+    {
+      "name": "label_status",
+      "value": "Status"
+    },
+    {
+      "name": "label_purchase_price",
+      "value": "Purchase Price (¥)"
+    },
+    {
+      "name": "label_purchase_date",
+      "value": "Purchase Date"
+    },
+    {
+      "name": "label_target_usage",
+      "value": "Target Usage (days)"
+    },
+    {
+      "name": "placeholder_asset_name",
+      "value": "Asset name"
+    },
+    {
+      "name": "placeholder_price",
+      "value": "0"
+    },
+    {
+      "name": "placeholder_days",
+      "value": "1095"
+    },
+    {
+      "name": "button_select_icon",
+      "value": "or Select Icon"
+    },
+    {
+      "name": "button_upload_image",
+      "value": "Upload Image"
+    },
+    {
+      "name": "title_select_icon",
+      "value": "Select Asset Icon"
+    },
+    {
+      "name": "error_name_required",
+      "value": "Name is required"
+    },
+    {
+      "name": "error_price_invalid",
+      "value": "Price must be > 0"
+    },
+    {
+      "name": "error_date_required",
+      "value": "Purchase date is required"
+    },
+    {
+      "name": "error_days_invalid",
+      "value": "Target days must be > 0"
+    },
+    {
+      "name": "error_icon_required",
+      "value": "Please select an icon or upload an image"
+    },
+    {
+      "name": "status_in_use",
+      "value": "In Use"
+    },
+    {
+      "name": "status_retired",
+      "value": "Retired"
+    },
+    {
+      "name": "status_sold",
+      "value": "Sold"
+    },
+    {
+      "name": "module_desc",
+      "value": "Entry module for Asset Tracker"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "Asset Tracker main ability"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "Asset Tracker"
+    },
+    {
+      "name": "app_description",
+      "value": "A long-term perspective on asset value tracking"
+    }
+  ]
+}
