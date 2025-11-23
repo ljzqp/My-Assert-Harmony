@@ -47,6 +47,8 @@ export class ImageUploadService {
       ? imagePath.substring(7)
       : imagePath;
 
+    console.info(`ImageUploadService: Reading file from ${actualPath}`);
+
     // 读取图片文件
     const file = fileIo.openSync(actualPath, fileIo.OpenMode.READ_ONLY);
     const stat = fileIo.statSync(actualPath);
@@ -54,10 +56,14 @@ export class ImageUploadService {
     fileIo.readSync(file.fd, buffer);
     fileIo.closeSync(file);
 
+    console.info(`ImageUploadService: File size ${stat.size} bytes`);
+
     // 将图片转换为Base64
     const base64Helper = new util.Base64Helper();
     const uint8Array = new Uint8Array(buffer);
     const imageBase64 = base64Helper.encodeToStringSync(uint8Array);
+
+    console.info(`ImageUploadService: Base64 encoded, length ${imageBase64.length}`);
 
     // 生成boundary
     const boundary = `----WebKitFormBoundary${Date.now()}`;
@@ -95,6 +101,8 @@ export class ImageUploadService {
 
     const requestBody = bodyParts.join('\r\n');
 
+    console.info(`ImageUploadService: Sending request to ${API_BASE_URL}/v1/sticker/process`);
+
     // 创建HTTP请求
     const httpRequest = http.createHttp();
 
@@ -113,8 +121,11 @@ export class ImageUploadService {
 
     httpRequest.destroy();
 
+    console.info(`ImageUploadService: Response code ${response.responseCode}`);
+
     if (response.responseCode === 200) {
       const result = JSON.parse(response.result as string) as StickerProcessResponse;
+      console.info(`ImageUploadService: API response code ${result.code}, message: ${result.message}`);
       if (result.code === 200 && result.data && result.data.imageBase64) {
         return result.data.imageBase64;
       } else {

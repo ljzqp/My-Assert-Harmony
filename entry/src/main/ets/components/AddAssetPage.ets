@@ -159,6 +159,7 @@ export struct AddAssetPage {
 
         // 开始处理图片
         this.isProcessingImage = true;
+        console.info(`Starting image processing for: ${originalImageUrl}`);
 
         try {
           // 调用后端处理图片
@@ -168,14 +169,18 @@ export struct AddAssetPage {
             'FFFFFF' // outline_color
           );
 
+          console.info(`Image processing completed, base64 length: ${processedBase64.length}`);
+
           // 保存处理后的图片到本地
           const processedPath = ImageUploadService.saveBase64ToFile(processedBase64, filesDir);
 
           // 更新为处理后的图片
           this.imageUrl = `file://${processedPath}`;
+          console.info(`Processed image saved to: ${processedPath}`);
         } catch (processError) {
           // 处理失败时保留原图
-          console.error(`Image processing failed: ${JSON.stringify(processError)}`);
+          const errorMsg = processError instanceof Error ? processError.message : String(processError);
+          console.error(`Image processing failed: ${errorMsg}`);
         } finally {
           this.isProcessingImage = false;
         }
