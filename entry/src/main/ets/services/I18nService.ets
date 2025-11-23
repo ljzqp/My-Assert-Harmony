@@ -218,9 +218,47 @@ export class I18n {
    * @param key 翻译键
    * @param args 替换参数（用于 {0}, {1} 等占位符）
    */
-  static t(key: keyof Translations, ...args: string[]): string {
+  static t(key: string, ...args: string[]): string {
     const trans = getCurrentTranslations();
-    let text = trans[key] || key;
+    let text = '';
+
+    switch (key) {
+      case 'app_name': text = trans.app_name; break;
+      case 'page_title_my_assets': text = trans.page_title_my_assets; break;
+      case 'page_subtitle': text = trans.page_subtitle; break;
+      case 'page_title_new_asset': text = trans.page_title_new_asset; break;
+      case 'btn_add_new_asset': text = trans.btn_add_new_asset; break;
+      case 'btn_save_asset': text = trans.btn_save_asset; break;
+      case 'btn_cancel': text = trans.btn_cancel; break;
+      case 'btn_select_photo': text = trans.btn_select_photo; break;
+      case 'btn_select_icon': text = trans.btn_select_icon; break;
+      case 'label_total_value': text = trans.label_total_value; break;
+      case 'label_daily_cost': text = trans.label_daily_cost; break;
+      case 'label_asset_count': text = trans.label_asset_count; break;
+      case 'label_name': text = trans.label_name; break;
+      case 'label_status': text = trans.label_status; break;
+      case 'label_purchase_price': text = trans.label_purchase_price; break;
+      case 'label_purchase_date': text = trans.label_purchase_date; break;
+      case 'label_target_usage': text = trans.label_target_usage; break;
+      case 'label_days_remaining': text = trans.label_days_remaining; break;
+      case 'label_per_day': text = trans.label_per_day; break;
+      case 'status_in_use': text = trans.status_in_use; break;
+      case 'status_retired': text = trans.status_retired; break;
+      case 'status_sold': text = trans.status_sold; break;
+      case 'placeholder_asset_name': text = trans.placeholder_asset_name; break;
+      case 'placeholder_price': text = trans.placeholder_price; break;
+      case 'placeholder_date': text = trans.placeholder_date; break;
+      case 'placeholder_days': text = trans.placeholder_days; break;
+      case 'error_name_required': text = trans.error_name_required; break;
+      case 'error_price_invalid': text = trans.error_price_invalid; break;
+      case 'error_date_required': text = trans.error_date_required; break;
+      case 'error_days_invalid': text = trans.error_days_invalid; break;
+      case 'error_icon_required': text = trans.error_icon_required; break;
+      case 'empty_no_assets': text = trans.empty_no_assets; break;
+      case 'empty_add_first': text = trans.empty_add_first; break;
+      case 'icon_picker_title': text = trans.icon_picker_title; break;
+      default: text = key;
+    }
 
     // 替换占位符
     for (let i = 0; i < args.length; i++) {
