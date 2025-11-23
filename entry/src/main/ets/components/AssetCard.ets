@@ -175,9 +175,9 @@ export struct AssetCard {
               .backgroundColor($r('app.color.progress_bar_bg'))
               .borderRadius(3)
 
-            // 进度条前景（剩余比例）
+            // 进度条前景（已使用比例）
             Row()
-              .width(`${100 - this.getProgress()}%`)
+              .width(`${this.getProgress()}%`)
               .height(6)
               .backgroundColor($r('app.color.primary'))
               .borderRadius(3)
