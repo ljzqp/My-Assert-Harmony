@@ -137,12 +137,19 @@ export struct AssetCard {
           .textOverflow({ overflow: TextOverflow.Ellipsis })
           .width('100%')
 
-        // 原价（删除线样式）
-        Text(`¥ ${formatCurrency(this.asset.purchasePrice)}`)
-          .fontSize(11)
-          .fontColor($r('app.color.text_secondary'))
-          .decoration({ type: TextDecorationType.LineThrough })
-          .margin({ top: 2 })
+        // 原价和预计使用天数（左右布局）
+        Row() {
+          Text(`¥ ${formatCurrency(this.asset.purchasePrice)}`)
+            .fontSize(11)
+            .fontColor($r('app.color.text_secondary'))
+
+          Text(`${this.asset.targetUsageDays}天`)
+            .fontSize(11)
+            .fontColor($r('app.color.text_secondary'))
+        }
+        .width('100%')
+        .justifyContent(FlexAlign.SpaceBetween)
+        .margin({ top: 4 })
 
         // 日均成本（突出显示）
         Row() {
@@ -157,11 +164,35 @@ export struct AssetCard {
         }
         .margin({ top: 4 })
 
-        // 剩余天数
-        Text(`还剩 ${this.getDaysRemaining()} 天`)
-          .fontSize(10)
-          .fontColor($r('app.color.text_secondary'))
-          .margin({ top: 4 })
+        // 剩余天数进度条
+        Column() {
+          // 进度条
+          Stack() {
+            // 进度条背景
+            Row()
+              .width('100%')
+              .height(6)
+              .backgroundColor($r('app.color.progress_bar_bg'))
+              .borderRadius(3)
+
+            // 进度条前景（剩余比例）
+            Row()
+              .width(`${100 - this.getProgress()}%`)
+              .height(6)
+              .backgroundColor($r('app.color.primary'))
+              .borderRadius(3)
+          }
+          .width('100%')
+          .alignContent(Alignment.Start)
+
+          // 剩余天数文字
+          Text(`还剩 ${this.getDaysRemaining()} 天`)
+            .fontSize(10)
+            .fontColor($r('app.color.text_secondary'))
+            .margin({ top: 4 })
+        }
+        .width('100%')
+        .margin({ top: 8 })
       }
       .width('100%')
       .padding(12)
