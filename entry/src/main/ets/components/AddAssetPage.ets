@@ -12,6 +12,7 @@ import { fileIo } from '@kit.CoreFileKit';
 import { common } from '@kit.AbilityKit';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { ImageUploadService } from '../services/ImageUploadService';
+import { ImageCompressService } from '../services/ImageCompressService';
 
 /**
  * 新增资产页面组件
@@ -133,12 +134,12 @@ export struct AddAssetPage {
 
         // 生成唯一文件名
         const timestamp = Date.now();
-        const fileName = `asset_image_${timestamp}.jpg`;
-        const destPath = `${filesDir}/${fileName}`;
+        const originalFileName = `asset_image_${timestamp}.jpg`;
+        const originalPath = `${filesDir}/${originalFileName}`;
 
         // 复制图片到应用沙箱目录
         const sourceFile = fileIo.openSync(sourceUri, fileIo.OpenMode.READ_ONLY);
-        const destFile = fileIo.openSync(destPath, fileIo.OpenMode.CREATE | fileIo.OpenMode.WRITE_ONLY);
+        const destFile = fileIo.openSync(originalPath, fileIo.OpenMode.CREATE | fileIo.OpenMode.WRITE_ONLY);
 
         // 读取源文件并写入目标文件
         const bufferSize = 4096;
@@ -152,19 +153,36 @@ export struct AddAssetPage {
         fileIo.closeSync(sourceFile);
         fileIo.closeSync(destFile);
 
-        // 先显示原图
-        const originalImageUrl = `file://${destPath}`;
-        this.imageUrl = originalImageUrl;
-        this.icon = ''; // 清空图标
-
         // 开始处理图片
         this.isProcessingImage = true;
-        console.info(`Starting image processing for: ${originalImageUrl}`);
+        this.icon = ''; // 清空图标
+
+        // 压缩图片
+        const compressedFileName = `compressed_${timestamp}.jpg`;
+        const compressedPath = `${filesDir}/${compressedFileName}`;
+
+        console.info(`Starting image compression for: ${originalPath}`);
 
         try {
+          await ImageCompressService.compressImage(
+            originalPath,
+            compressedPath,
+            {
+              maxWidth: 1280,
+              maxHeight: 1280,
+              quality: 75
+            }
+          );
+
+          // 显示压缩后的图片
+          const compressedImageUrl = `file://${compressedPath}`;
+          this.imageUrl = compressedImageUrl;
+
+          console.info(`Starting image processing for: ${compressedImageUrl}`);
+
           // 调用后端处理图片
           const processedBase64 = await ImageUploadService.processStickerImage(
-            originalImageUrl,
+            compressedImageUrl,
             12,      // outline_radius
             'FFFFFF' // outline_color
           );
@@ -178,9 +196,13 @@ export struct AddAssetPage {
           this.imageUrl = `file://${processedPath}`;
           console.info(`Processed image saved to: ${processedPath}`);
         } catch (processError) {
-          // 处理失败时保留原图
+          // 处理失败时显示压缩后的图片
           const errorMsg = processError instanceof Error ? processError.message : String(processError);
           console.error(`Image processing failed: ${errorMsg}`);
+          // 如果压缩也失败了，显示原图
+          if (this.imageUrl.length === 0) {
+            this.imageUrl = `file://${originalPath}`;
+          }
         } finally {
           this.isProcessingImage = false;
         }
