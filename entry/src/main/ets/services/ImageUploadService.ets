@@ -8,7 +8,7 @@ import { fileIo } from '@kit.CoreFileKit';
 import { util } from '@kit.ArkTS';
 
 // API 基础地址
-const API_BASE_URL = 'http://47.115.163.247:8081';
+const API_BASE_URL = 'http://47.115.163.247:8081/api';
 
 /**
  * 贴纸处理响应数据
