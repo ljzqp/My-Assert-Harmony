@@ -13,6 +13,7 @@ import { common } from '@kit.AbilityKit';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { ImageUploadService } from '../services/ImageUploadService';
 import { ImageCompressService } from '../services/ImageCompressService';
+import { I18n } from '../services/I18nService';
 
 /**
  * 新增资产页面组件
@@ -250,7 +251,7 @@ export struct AddAssetPage {
         Column() {
           // 页面标题栏
           Row() {
-            Text('New Asset')
+            Text(I18n.t('page_title_new_asset'))
               .fontSize(32)
               .fontWeight(FontWeight.Bold)
               .fontColor($r('app.color.text_primary'))
@@ -312,7 +313,7 @@ export struct AddAssetPage {
               // 按钮区域
               Column({ space: 8 }) {
                 // 选择图片按钮
-                Button('Select Photo')
+                Button(I18n.t('btn_select_photo'))
                   .width('100%')
                   .height(40)
                   .backgroundColor($r('app.color.primary'))
@@ -325,7 +326,7 @@ export struct AddAssetPage {
                   })
 
                 // 选择图标按钮
-                Button('or Select Icon')
+                Button(I18n.t('btn_select_icon'))
                   .width('100%')
                   .height(40)
                   .backgroundColor($r('app.color.surface'))
@@ -344,12 +345,12 @@ export struct AddAssetPage {
 
             // 名称输入
             Column({ space: 8 }) {
-              Text('Name')
+              Text(I18n.t('label_name'))
                 .fontSize(14)
                 .fontWeight(FontWeight.Medium)
                 .fontColor($r('app.color.text_secondary'))
 
-              TextInput({ placeholder: 'e.g., iPhone 15 Pro', text: this.name })
+              TextInput({ placeholder: I18n.t('placeholder_asset_name'), text: this.name })
                 .backgroundColor($r('app.color.surface'))
                 .borderRadius(8)
                 .padding(12)
@@ -369,7 +370,7 @@ export struct AddAssetPage {
 
             // 状态选择
             Column({ space: 8 }) {
-              Text('Status')
+              Text(I18n.t('label_status'))
                 .fontSize(14)
                 .fontWeight(FontWeight.Medium)
                 .fontColor($r('app.color.text_secondary'))
@@ -378,7 +379,7 @@ export struct AddAssetPage {
                 ForEach(
                   assetStatuses,
                   (statusOption: string) => {
-                    Button(statusOption)
+                    Button(I18n.getStatusText(statusOption))
                       .layoutWeight(1)
                       .backgroundColor(
                         this.status === statusOption
@@ -409,12 +410,12 @@ export struct AddAssetPage {
             Row({ space: 16 }) {
               // 价格输入
               Column({ space: 8 }) {
-                Text('Purchase Price (¥)')
+                Text(I18n.t('label_purchase_price'))
                   .fontSize(14)
                   .fontWeight(FontWeight.Medium)
                   .fontColor($r('app.color.text_secondary'))
 
-                TextInput({ placeholder: '9999', text: this.price })
+                TextInput({ placeholder: I18n.t('placeholder_price'), text: this.price })
                   .type(InputType.Number)
                   .backgroundColor($r('app.color.surface'))
                   .borderRadius(8)
@@ -434,12 +435,12 @@ export struct AddAssetPage {
 
               // 日期输入
               Column({ space: 8 }) {
-                Text('Purchase Date')
+                Text(I18n.t('label_purchase_date'))
                   .fontSize(14)
                   .fontWeight(FontWeight.Medium)
                   .fontColor($r('app.color.text_secondary'))
 
-                TextInput({ placeholder: 'YYYY-MM-DD', text: this.date })
+                TextInput({ placeholder: I18n.t('placeholder_date'), text: this.date })
                   .backgroundColor($r('app.color.surface'))
                   .borderRadius(8)
                   .padding(12)
@@ -460,12 +461,12 @@ export struct AddAssetPage {
 
             // 目标使用天数
             Column({ space: 8 }) {
-              Text('Target Usage (days)')
+              Text(I18n.t('label_target_usage'))
                 .fontSize(14)
                 .fontWeight(FontWeight.Medium)
                 .fontColor($r('app.color.text_secondary'))
 
-              TextInput({ placeholder: 'e.g., 1095 for 3 years', text: this.targetDays })
+              TextInput({ placeholder: I18n.t('placeholder_days'), text: this.targetDays })
                 .type(InputType.Number)
                 .backgroundColor($r('app.color.surface'))
                 .borderRadius(8)
@@ -494,7 +495,7 @@ export struct AddAssetPage {
 
       // 底部保存按钮
       Column() {
-        Button('Save Asset')
+        Button(I18n.t('btn_save_asset'))
           .width('90%')
           .height(56)
           .backgroundColor(this.getSaveButtonColor())

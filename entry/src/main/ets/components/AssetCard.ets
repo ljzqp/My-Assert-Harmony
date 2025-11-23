@@ -6,6 +6,7 @@
 import { Asset } from '../models/Asset';
 import { calculateDaysUsed } from '../utils/DateUtils';
 import { formatCurrency } from '../utils/FormatUtils';
+import { I18n } from '../services/I18nService';
 
 /**
  * 状态颜色配置接口
@@ -114,7 +115,7 @@ export struct AssetCard {
         .borderRadius(16)
 
         // 状态徽章（悬浮在左上角）
-        Text(this.asset.status === 'In Use' ? '使用中' : this.asset.status)
+        Text(I18n.getStatusText(this.asset.status))
           .fontSize(10)
           .fontWeight(FontWeight.Bold)
           .fontColor(this.getStatusColor().textColor)
@@ -158,7 +159,7 @@ export struct AssetCard {
             .fontWeight(FontWeight.Bold)
             .fontColor($r('app.color.primary'))
 
-          Text('/天')
+          Text(I18n.t('label_per_day'))
             .fontSize(12)
             .fontColor($r('app.color.primary'))
         }
@@ -186,7 +187,7 @@ export struct AssetCard {
           .alignContent(Alignment.Start)
 
           // 剩余天数文字
-          Text(`还剩 ${this.getDaysRemaining()} 天`)
+          Text(I18n.t('label_days_remaining', this.getDaysRemaining().toString()))
             .fontSize(10)
             .fontColor($r('app.color.text_secondary'))
             .margin({ top: 4 })

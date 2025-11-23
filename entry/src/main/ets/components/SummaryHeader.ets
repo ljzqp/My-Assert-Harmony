@@ -6,6 +6,7 @@
 import { Asset } from '../models/Asset';
 import { formatCurrency, formatDailyCost } from '../utils/FormatUtils';
 import { calculateDaysUsed } from '../utils/DateUtils';
+import { I18n } from '../services/I18nService';
 
 /**
  * 汇总数据接口
@@ -57,7 +58,7 @@ export struct SummaryHeader {
   build() {
     Column() {
       // 总价值标签
-      Text('Total Value')
+      Text(I18n.t('label_total_value'))
         .fontSize(14)
         .fontColor($r('app.color.text_secondary'))
 
@@ -72,7 +73,7 @@ export struct SummaryHeader {
       Row() {
         // 每日花费总和
         Column() {
-          Text('每日花费')
+          Text(I18n.t('label_daily_cost'))
             .fontSize(12)
             .fontColor($r('app.color.text_secondary'))
 
@@ -87,7 +88,7 @@ export struct SummaryHeader {
 
         // 资产数量
         Column() {
-          Text('资产数量')
+          Text(I18n.t('label_asset_count'))
             .fontSize(12)
             .fontColor($r('app.color.text_secondary'))
 

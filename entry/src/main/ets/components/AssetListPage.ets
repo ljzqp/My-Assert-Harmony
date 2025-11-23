@@ -6,6 +6,7 @@
 import { Asset } from '../models/Asset';
 import { SummaryHeader } from './SummaryHeader';
 import { AssetCard } from './AssetCard';
+import { I18n } from '../services/I18nService';
 
 /**
  * 资产列表页面组件
@@ -29,13 +30,13 @@ export struct AssetListPage {
         Column() {
           // 页面标题
           Column() {
-            Text('My Assets')
+            Text(I18n.t('page_title_my_assets'))
               .fontSize(32)
               .fontWeight(FontWeight.Bold)
               .fontColor($r('app.color.text_primary'))
               .width('100%')
 
-            Text('A long-term perspective on value.')
+            Text(I18n.t('page_subtitle'))
               .fontSize(14)
               .fontColor($r('app.color.text_secondary'))
               .width('100%')
@@ -69,12 +70,12 @@ export struct AssetListPage {
           } else {
             // 空状态提示
             Column() {
-              Text('No assets yet')
+              Text(I18n.t('empty_no_assets'))
                 .fontSize(16)
                 .fontColor($r('app.color.text_secondary'))
                 .margin({ top: 32, bottom: 8 })
 
-              Text('Tap the button below to add your first asset')
+              Text(I18n.t('empty_add_first'))
                 .fontSize(14)
                 .fontColor($r('app.color.text_secondary'))
             }
@@ -97,7 +98,7 @@ export struct AssetListPage {
               .fontColor(Color.White)
               .fontWeight(FontWeight.Bold)
 
-            Text('Add New Asset')
+            Text(I18n.t('btn_add_new_asset'))
               .fontSize(16)
               .fontColor(Color.White)
               .fontWeight(FontWeight.Bold)
