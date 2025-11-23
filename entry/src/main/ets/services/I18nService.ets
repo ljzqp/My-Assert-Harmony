@@ -180,18 +180,20 @@ const en_US: Translations = {
 };
 
 /**
- * 所有翻译
- */
-const translations: Record<Language, Translations> = {
-  zh_CN: zh_CN,
-  en_US: en_US
-};
-
-/**
  * 当前语言（默认中文）
  * 可以通过修改这个值来切换语言
  */
 let currentLanguage: Language = 'zh_CN';
+
+/**
+ * 获取当前翻译对象
+ */
+function getCurrentTranslations(): Translations {
+  if (currentLanguage === 'en_US') {
+    return en_US;
+  }
+  return zh_CN;
+}
 
 /**
  * 国际化服务类
@@ -217,7 +219,8 @@ export class I18n {
    * @param args 替换参数（用于 {0}, {1} 等占位符）
    */
   static t(key: keyof Translations, ...args: string[]): string {
-    let text = translations[currentLanguage][key] || key;
+    const trans = getCurrentTranslations();
+    let text = trans[key] || key;
 
     // 替换占位符
     for (let i = 0; i < args.length; i++) {
