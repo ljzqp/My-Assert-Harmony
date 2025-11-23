@@ -7,6 +7,10 @@ import { Asset, AssetInput } from '../models/Asset';
 import { assetStatuses } from '../constants/Constants';
 import { IconPicker } from './IconPicker';
 import { getTodayString } from '../utils/DateUtils';
+import { picker } from '@kit.CoreFileKit';
+import { fileIo } from '@kit.CoreFileKit';
+import { common } from '@kit.AbilityKit';
+import { BusinessError } from '@kit.BasicServicesKit';
 
 /**
  * 新增资产页面组件
@@ -107,6 +111,56 @@ export struct AddAssetPage {
   }
 
   /**
+   * 从相册选择图片
+   */
+  private async pickImageFromGallery(): Promise<void> {
+    try {
+      const photoSelectOptions = new picker.PhotoSelectOptions();
+      photoSelectOptions.MIMEType = picker.PhotoViewMIMETypes.IMAGE_TYPE;
+      photoSelectOptions.maxSelectNumber = 1;
+
+      const photoPicker = new picker.PhotoViewPicker();
+      const result = await photoPicker.select(photoSelectOptions);
+
+      if (result.photoUris && result.photoUris.length > 0) {
+        const sourceUri = result.photoUris[0];
+
+        // 获取应用上下文
+        const context = getContext(this) as common.UIAbilityContext;
+        const filesDir = context.filesDir;
+
+        // 生成唯一文件名
+        const timestamp = Date.now();
+        const fileName = `asset_image_${timestamp}.jpg`;
+        const destPath = `${filesDir}/${fileName}`;
+
+        // 复制图片到应用沙箱目录
+        const sourceFile = fileIo.openSync(sourceUri, fileIo.OpenMode.READ_ONLY);
+        const destFile = fileIo.openSync(destPath, fileIo.OpenMode.CREATE | fileIo.OpenMode.WRITE_ONLY);
+
+        // 读取源文件并写入目标文件
+        const bufferSize = 4096;
+        const buffer = new ArrayBuffer(bufferSize);
+        let readLen = fileIo.readSync(sourceFile.fd, buffer);
+        while (readLen > 0) {
+          fileIo.writeSync(destFile.fd, buffer, { length: readLen });
+          readLen = fileIo.readSync(sourceFile.fd, buffer);
+        }
+
+        fileIo.closeSync(sourceFile);
+        fileIo.closeSync(destFile);
+
+        // 更新图片路径
+        this.imageUrl = destPath;
+        this.icon = ''; // 清空图标
+      }
+    } catch (error) {
+      const err = error as BusinessError;
+      console.error(`Failed to pick image: ${err.message}`);
+    }
+  }
+
+  /**
    * 取消并返回列表页
    */
   private handleCancel(): void {
@@ -186,17 +240,35 @@ export struct AddAssetPage {
                 }
               }
 
-              // 选择图标按钮
-              Button('or Select Icon')
-                .height(48)
-                .backgroundColor($r('app.color.surface'))
-                .fontColor($r('app.color.text_primary'))
-                .fontSize(14)
-                .fontWeight(FontWeight.Medium)
-                .borderRadius(8)
-                .onClick(() => {
-                  this.isIconPickerOpen = true;
-                })
+              // 按钮区域
+              Column({ space: 8 }) {
+                // 选择图片按钮
+                Button('Select Photo')
+                  .width('100%')
+                  .height(40)
+                  .backgroundColor($r('app.color.primary'))
+                  .fontColor(Color.White)
+                  .fontSize(14)
+                  .fontWeight(FontWeight.Medium)
+                  .borderRadius(8)
+                  .onClick(() => {
+                    this.pickImageFromGallery();
+                  })
+
+                // 选择图标按钮
+                Button('or Select Icon')
+                  .width('100%')
+                  .height(40)
+                  .backgroundColor($r('app.color.surface'))
+                  .fontColor($r('app.color.text_primary'))
+                  .fontSize(14)
+                  .fontWeight(FontWeight.Medium)
+                  .borderRadius(8)
+                  .onClick(() => {
+                    this.isIconPickerOpen = true;
+                  })
+              }
+              .layoutWeight(1)
             }
             .width('100%')
             .justifyContent(FlexAlign.Center)

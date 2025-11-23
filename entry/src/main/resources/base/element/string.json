@@ -135,6 +135,10 @@
     {
       "name": "app_description",
       "value": "A long-term perspective on asset value tracking"
+    },
+    {
+      "name": "permission_read_media_reason",
+      "value": "Used to select photos from album as asset images"
     }
   ]
 }
