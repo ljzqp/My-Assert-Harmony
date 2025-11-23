@@ -5,6 +5,7 @@
 
 import { Asset } from '../models/Asset';
 import { formatCurrency, formatDailyCost } from '../utils/FormatUtils';
+import { calculateDaysUsed } from '../utils/DateUtils';
 
 /**
  * 汇总数据接口
@@ -12,7 +13,7 @@ import { formatCurrency, formatDailyCost } from '../utils/FormatUtils';
 interface SummaryData {
   totalAssets: number;
   totalPurchaseAmount: number;
-  avgDailyCost: number;
+  totalDailyCost: number;
 }
 
 /**
@@ -23,7 +24,7 @@ export struct SummaryHeader {
   @Prop assets: Asset[] = [];
 
   /**
-   * 计算汇总数据（替代React的useMemo）
+   * 计算汇总数据
    */
   private calculateSummary(): SummaryData {
     const totalAssets: number = this.assets.length;
@@ -33,32 +34,21 @@ export struct SummaryHeader {
       totalPurchaseAmount += this.assets[i].purchasePrice;
     }
 
-    // 筛选在用资产
-    const inUseAssets: Asset[] = [];
-    for (let i = 0; i < this.assets.length; i++) {
-      if (this.assets[i].status === 'In Use') {
-        inUseAssets.push(this.assets[i]);
-      }
-    }
-
-    // 计算总日均成本
+    // 计算所有资产的日均成本总和
+    // 每个资产的日均成本 = 购买价格 / 已使用天数
     let totalDailyCost: number = 0;
-    for (let i = 0; i < inUseAssets.length; i++) {
-      const asset: Asset = inUseAssets[i];
-      if (asset.targetUsageDays > 0) {
-        totalDailyCost += asset.purchasePrice / asset.targetUsageDays;
+    for (let i = 0; i < this.assets.length; i++) {
+      const asset: Asset = this.assets[i];
+      const daysUsed = calculateDaysUsed(asset.purchaseDate);
+      if (daysUsed > 0) {
+        totalDailyCost += asset.purchasePrice / daysUsed;
       }
     }
-
-    // 计算平均日均成本
-    const avgDailyCost: number = inUseAssets.length > 0
-      ? totalDailyCost / inUseAssets.length
-      : 0;
 
     const summary: SummaryData = {
       totalAssets: totalAssets,
       totalPurchaseAmount: totalPurchaseAmount,
-      avgDailyCost: avgDailyCost
+      totalDailyCost: totalDailyCost
     };
 
     return summary;
@@ -80,13 +70,13 @@ export struct SummaryHeader {
 
       // 统计指标网格
       Row() {
-        // 日均成本
+        // 每日花费总和
         Column() {
-          Text('Avg Daily Cost')
+          Text('每日花费')
             .fontSize(12)
             .fontColor($r('app.color.text_secondary'))
 
-          Text(`¥${formatDailyCost(this.calculateSummary().avgDailyCost)}`)
+          Text(`¥${formatDailyCost(this.calculateSummary().totalDailyCost)}`)
             .fontSize(18)
             .fontWeight(FontWeight.Medium)
             .fontColor($r('app.color.primary'))
@@ -97,7 +87,7 @@ export struct SummaryHeader {
 
         // 资产数量
         Column() {
-          Text('Total Assets')
+          Text('资产数量')
             .fontSize(12)
             .fontColor($r('app.color.text_secondary'))
 
